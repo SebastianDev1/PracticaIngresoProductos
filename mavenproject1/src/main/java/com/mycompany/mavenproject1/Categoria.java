@@ -3,27 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.mavenproject1;
-
 public class Categoria {
+    private int id;
     private String nombre;
-    private String id;
-    
-    public Categoria(String nombre, String id){
+
+    public Categoria(int id, String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la categoría no puede estar vacío.");
+        }
         this.id = id;
         this.nombre = nombre;
     }
-    public String getId(){
-        return id;
-    }
-    public void setId(String id){
-        this.id = id;
-    }
-    public String nombre(){
+
+    public String getNombre() {
         return nombre;
-    }
-    public void setNombre(String nombre){
-        if(nombre != null && nombre.trim().isEmpty()){
-        this.nombre = nombre;    
-        }
     }
 }
