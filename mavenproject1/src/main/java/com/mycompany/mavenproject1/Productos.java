@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.mavenproject1;
+
 public class Productos {
     private String codigo;
     private String nombre;
@@ -25,6 +22,9 @@ public class Productos {
     public void mostrarResumen() {
         System.out.println("Producto: " + nombre + " | Código: " + codigo + " | Precio: $" + precio + " | Categoría: " + categoria.getNombre());
     }
+
+    public String getCodigo() { return codigo; }
+    public String getNombre() { return nombre; }
+    public double getPrecio() { return precio; }
+    public Categoria getCategoria() { return categoria; }
 }
-
-

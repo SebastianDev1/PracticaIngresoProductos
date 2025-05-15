@@ -1,0 +1,38 @@
+[
+  {
+    "codigo": "76273621",
+    "nombre": "Atun Isabel",
+    "precio": 999.0,
+    "categoria": {
+      "id": 19283921,
+      "nombre": "Enlatado"
+    }
+  },
+  {
+    "codigo": "123321",
+    "nombre": "Atun Real",
+    "precio": 2.5,
+    "categoria": {
+      "id": 909,
+      "nombre": "Enlatados"
+    }
+  },
+  {
+    "codigo": "0001",
+    "nombre": "pan",
+    "precio": 0.1,
+    "categoria": {
+      "id": 12,
+      "nombre": "alimentos"
+    }
+  },
+  {
+    "codigo": "8287276363",
+    "nombre": "Pan",
+    "precio": 0.5,
+    "categoria": {
+      "id": 929292,
+      "nombre": "Harinas de Trigo"
+    }
+  }
+]
