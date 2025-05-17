@@ -1,5 +1,7 @@
-Codigo,Nombre,Precio,CategoriaID,CategoriaNombre
-76273621,Atun Isabel,999.0,19283921,Enlatado
-123321,Atun Real,2.5,909,Enlatados
-0001,pan,0.1,12,alimentos
-8287276363,Pan,0.5,929292,Harinas de Trigo
+Codigo,Nombre,Precio,CategoriaID,CategoriaNombre,Correo
+76273621,Atun Isabel,999.0,19283921,Enlatado,null
+123321,Atun Real,2.5,909,Enlatados,null
+0001,pan,0.1,12,alimentos,null
+8287276363,Pan,0.5,929292,Harinas de Trigo,null
+L2313,Leche Toni,1.0,1212,Lacteos,null
+L002,Jabon,0.25,1,Aseo,menma899@yahoo.com

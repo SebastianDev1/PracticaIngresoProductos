@@ -15,7 +15,7 @@ public class Mavenproject1 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Productos> productos = cargarDesdeJSON(); // Cargar productos previos
+        ArrayList<Productos> productos = cargarDesdeJSON();
 
         int opcion = -1;
 
@@ -23,95 +23,20 @@ public class Mavenproject1 {
             System.out.println("\n-------------------- MENU --------------------");
             System.out.println("1. Agregar producto");
             System.out.println("2. Mostrar productos ingresados");
-            System.out.println("3. Modificar productos (no implementado)");
+            System.out.println("3. Buscar producto por código (verifica duplicado)");
             System.out.println("4. Salir");
-            System.out.print("Elija una opcion: ");
+            System.out.print("Elija una opción: ");
 
             if (scanner.hasNextInt()) {
                 opcion = scanner.nextInt();
                 scanner.nextLine();
 
-                try {
-                    switch (opcion) {
-                        case 1 -> {
-                            try {
-                                String codigo;
-                                String nombre;
-                                double precio;
-                                int idCat;
-                                String nombreCat;
-
-                                System.out.print("Código del producto: ");
-                                codigo = scanner.nextLine();
-
-                                // Validación de nombre
-                                System.out.print("Nombre del producto: ");
-                                nombre = scanner.nextLine();
-                                if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-                                    throw new IllegalArgumentException("El nombre del producto debe contener solo letras.");
-                                }
-
-                                // Validación de precio
-                                System.out.print("Precio del producto: ");
-                                String precioStr = scanner.nextLine();
-                                if (!precioStr.matches("\\d+(\\.\\d{1,2})?")) {
-                                    throw new IllegalArgumentException("El precio debe ser un número válido.");
-                                }
-                                precio = Double.parseDouble(precioStr);
-                                if (precio <= 0) {
-                                    throw new IllegalArgumentException("El precio debe ser mayor a 0.");
-                                }
-
-                                // Validación de ID categoría
-                                System.out.print("ID de la categoría: ");
-                                String idStr = scanner.nextLine();
-                                if (!idStr.matches("\\d+")) {
-                                    throw new IllegalArgumentException("El ID debe ser un número entero.");
-                                }
-                                idCat = Integer.parseInt(idStr);
-                                if (idCat <= 0) {
-                                    throw new IllegalArgumentException("El ID de la categoría debe ser mayor que 0.");
-                                }
-
-                                // Validación de nombre categoría
-                                System.out.print("Nombre de la categoría: ");
-                                nombreCat = scanner.nextLine();
-                                if (!nombreCat.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
-                                    throw new IllegalArgumentException("El nombre de la categoría debe contener solo letras.");
-                                }
-
-                                Categoria categoria = new Categoria(idCat, nombreCat);
-                                Productos nuevoProducto = new Productos(codigo, nombre, precio, categoria);
-                                productos.add(nuevoProducto);
-                                System.out.println("Producto agregado.");
-
-                                guardarCSV(productos);
-                                guardarJSON(productos);
-                            } catch (IllegalArgumentException e) {
-                                System.out.println("Error: " + e.getMessage());
-                            } catch (Exception e) {
-                                System.out.println("Error inesperado: " + e.getMessage());
-                            }
-                        }
-
-                        case 2 -> {
-                            if (productos.isEmpty()) {
-                                System.out.println("No hay productos registrados.");
-                            } else {
-                                System.out.println("\n--- LISTA DE PRODUCTOS ---");
-                                for (Productos p : productos) {
-                                    p.mostrarResumen();
-                                }
-                            }
-                        }
-
-                        case 3 -> System.out.println("Función de modificación no implementada.");
-                        case 4 -> System.out.println("Programa finalizado.");
-                        default -> System.out.println("Opción inválida. Intenta otra vez.");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error: " + e.getMessage());
-                    scanner.nextLine();
+                switch (opcion) {
+                    case 1 -> agregarProducto(scanner, productos);
+                    case 2 -> mostrarProductos(productos);
+                    case 3 -> buscarDuplicado(scanner, productos);
+                    case 4 -> System.out.println("Programa finalizado.");
+                    default -> System.out.println("Opción inválida. Intenta otra vez.");
                 }
             } else {
                 System.out.println("Entrada no válida. Debes ingresar un número.");
@@ -122,14 +47,93 @@ public class Mavenproject1 {
         scanner.close();
     }
 
+    private static void agregarProducto(Scanner scanner, ArrayList<Productos> productos) {
+        try {
+            System.out.print("Código del producto: ");
+            String codigo = scanner.nextLine();
+
+            // Verificación de código duplicado
+            for (Productos p : productos) {
+                if (p.getCodigo().equalsIgnoreCase(codigo)) {
+                    throw new DatosDuplicadosException("El código ya existe en la base de datos.");
+                }
+            }
+
+            System.out.print("Nombre del producto: ");
+            String nombre = scanner.nextLine();
+            if (nombre.isBlank()) throw new IllegalArgumentException("El nombre no puede estar vacío.");
+
+            System.out.print("Precio del producto: ");
+            double precio = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Correo del proveedor: ");
+            String correo = scanner.nextLine();
+
+            System.out.print("ID de la categoría: ");
+            int idCat = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Nombre de la categoría: ");
+            String nombreCat = scanner.nextLine();
+
+            Categoria categoria = new Categoria(idCat, nombreCat);
+            Productos nuevoProducto = new Productos(codigo, nombre, precio, categoria, correo);
+
+            productos.add(nuevoProducto);
+            System.out.println("Producto agregado correctamente........");
+
+            guardarCSV(productos);
+            guardarJSON(productos);
+
+        } catch (FormatoCorreoInvalidoException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (PrecioInvalidoException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (DatosDuplicadosException e) {
+            System.out.println("Duplicado: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error de argumento: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarProductos(ArrayList<Productos> productos) {
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos registrados.");
+        } else {
+            System.out.println("\n--- LISTA DE PRODUCTOS ---");
+            for (Productos p : productos) {
+                p.mostrarResumen();
+            }
+        }
+    }
+
+    private static void buscarDuplicado(Scanner scanner, ArrayList<Productos> productos) {
+        System.out.print("Ingrese código a buscar: ");
+        String codigo = scanner.nextLine();
+
+        boolean encontrado = false;
+        for (Productos p : productos) {
+            if (p.getCodigo().equalsIgnoreCase(codigo)) {
+                System.out.println("Código ya existe:");
+                p.mostrarResumen();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Código disponible. No hay duplicados.");
+        }
+    }
+
     private static void guardarCSV(ArrayList<Productos> productos) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(RUTA_CSV))) {
-            writer.write("Codigo,Nombre,Precio,CategoriaID,CategoriaNombre\n");
+            writer.write("Codigo,Nombre,Precio,CategoriaID,CategoriaNombre,Correo\n");
             for (Productos p : productos) {
                 writer.write(p.getCodigo() + "," + p.getNombre() + "," + p.getPrecio() + "," +
-                        p.getCategoria().getId() + "," + p.getCategoria().getNombre() + "\n");
+                        p.getCategoria().getId() + "," + p.getCategoria().getNombre() + "," + p.getCorreo() + "\n");
             }
-            System.out.println("Archivo CSV guardado correctamente.");
+            System.out.println("CSV guardado correctamente!!.....");
         } catch (IOException e) {
             System.out.println("Error al guardar CSV: " + e.getMessage());
         }
@@ -139,7 +143,7 @@ public class Mavenproject1 {
         try (FileWriter writer = new FileWriter(RUTA_JSON)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(productos, writer);
-            System.out.println("Archivo JSON guardado correctamente.");
+            System.out.println("JSON guardado correctamente!!..........");
         } catch (IOException e) {
             System.out.println("Error al guardar JSON: " + e.getMessage());
         }
@@ -154,7 +158,7 @@ public class Mavenproject1 {
                 Gson gson = new Gson();
                 Type tipoLista = new TypeToken<ArrayList<Productos>>() {}.getType();
                 productos = gson.fromJson(reader, tipoLista);
-                System.out.println("Productos cargados desde archivo JSON.");
+                System.out.println("Productos cargados desde JSON correctamente.");
             } catch (Exception e) {
                 System.out.println("No se pudo cargar JSON existente: " + e.getMessage());
             }

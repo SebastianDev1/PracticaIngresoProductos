@@ -34,5 +34,24 @@
       "id": 929292,
       "nombre": "Harinas de Trigo"
     }
+  },
+  {
+    "codigo": "L2313",
+    "nombre": "Leche Toni",
+    "precio": 1.0,
+    "categoria": {
+      "id": 1212,
+      "nombre": "Lacteos"
+    }
+  },
+  {
+    "codigo": "L002",
+    "nombre": "Jabon",
+    "precio": 0.25,
+    "categoria": {
+      "id": 1,
+      "nombre": "Aseo"
+    },
+    "correo": "menma899@yahoo.com"
   }
 ]
